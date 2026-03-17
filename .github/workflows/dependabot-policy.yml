@@ -1,0 +1,26 @@
+name: Dependabot PR Policy
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  dependabot-policy:
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ensure required labels for Dependabot PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const labels = (context.payload.pull_request.labels || []).map((l) => l.name);
+            const required = ["dependencies", "security"];
+            const missing = required.filter((label) => !labels.includes(label));
+            if (missing.length > 0) {
+              core.setFailed(`Dependabot PR is missing required labels: ${missing.join(", ")}`);
+            }
+

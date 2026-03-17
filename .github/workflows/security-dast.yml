@@ -1,0 +1,27 @@
+name: Security DAST Baseline
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: "Base URL to scan (staging environment)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  zap-baseline:
+    name: OWASP ZAP Baseline Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run ZAP Baseline
+        uses: zaproxy/action-baseline@v0.14.0
+        with:
+          target: ${{ inputs.target_url }}
+          fail_action: true
+          issue_title: "ZAP Baseline Scan Findings"
+          cmd_options: "-a"
+
