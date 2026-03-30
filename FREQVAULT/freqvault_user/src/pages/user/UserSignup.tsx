@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { CheckCircle2, XCircle, Shield } from "lucide-react";
+import { CheckCircle2, XCircle, Shield, Eye, EyeOff } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { API_BASE_URL, readApiJson } from "@/lib/api";
 import AuthBackdrop from "@/components/AuthBackdrop";
@@ -21,8 +21,11 @@ const UserSignup = () => {
     lastName: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,6 +33,7 @@ const UserSignup = () => {
     const normalizedFirstName = formData.firstName.trim();
     const normalizedLastName = formData.lastName.trim();
     const password = formData.password;
+    const confirmPassword = formData.confirmPassword;
 
     const passwordIsValid =
       password.length >= MIN_PASSWORD_LENGTH &&
@@ -56,12 +60,22 @@ const UserSignup = () => {
       return;
     }
 
+    if (password !== confirmPassword) {
+      toast({
+        title: "Passwords do not match",
+        description: "Confirm password must match the password you entered.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
       const response = await fetch(`${API_BASE_URL}/api/user/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           firstname: normalizedFirstName,
           lastname: normalizedLastName,
@@ -89,8 +103,7 @@ const UserSignup = () => {
           variant: "destructive",
         });
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
       toast({
         title: "Network Error",
         description: "Unable to connect to server",
@@ -203,16 +216,51 @@ const UserSignup = () => {
               <label htmlFor="password" className="mb-2 block text-sm font-semibold text-[#1f2328] dark:text-[#e6edf3]">
                 Password
               </label>
-              <input
-                id="password"
-                type="password"
-                autoComplete="new-password"
-                required
-                value={formData.password}
-                onChange={(e) => handleInputChange("password", e.target.value)}
-                className={inputClassName}
-                aria-describedby="password-requirements"
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  required
+                  value={formData.password}
+                  onChange={(e) => handleInputChange("password", e.target.value)}
+                  className={`${inputClassName} pr-10`}
+                  aria-describedby="password-requirements"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute inset-y-0 right-0 flex items-center px-3 text-[#656d76] dark:text-[#8b949e]"
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="confirmPassword" className="mb-2 block text-sm font-semibold text-[#1f2328] dark:text-[#e6edf3]">
+                Confirm password
+              </label>
+              <div className="relative">
+                <input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  required
+                  value={formData.confirmPassword}
+                  onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+                  className={`${inputClassName} pr-10`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword((prev) => !prev)}
+                  aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                  className="absolute inset-y-0 right-0 flex items-center px-3 text-[#656d76] dark:text-[#8b949e]"
+                >
+                  {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
             </div>
 
             <div
