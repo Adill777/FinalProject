@@ -77,7 +77,7 @@ jobs:
       - npm-audit-critical
     steps:
       - name: Run ZAP Baseline
-        uses: zaproxy/action-baseline@v0.14.0
+        uses: zaproxy/action-baseline@v0.15.0
         with:
           target: ${{ inputs.target_url }}
           fail_action: true
