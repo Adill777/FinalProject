@@ -28,7 +28,7 @@
     "nodemon": "^3.1.10",
     "qrcode": "^1.5.4",
     "speakeasy": "^2.0.0",
-    "zod": "^3.25.76"
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",
