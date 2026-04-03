@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",
-    "jest": "^29.7.0",
+    "jest": "^30.3.0",
     "supertest": "^7.1.1"
   }
 }
