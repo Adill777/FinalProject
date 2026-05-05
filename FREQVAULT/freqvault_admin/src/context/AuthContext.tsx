@@ -35,7 +35,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const login = (accessToken: string, email: string) => {
     setAdminSession(accessToken, email);
     setIsAuthenticated(true);
-    localStorage.setItem("isAuthenticated", "true");
   };
 
   const logout = () => {

@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
-import { apiFetch } from "@/lib/api";
+import { apiFetch, readApiJson } from "@/lib/api";
 import { RefreshCw, Trash2, RotateCcw } from "lucide-react";
 
 interface AdminFileItem {
@@ -63,11 +63,11 @@ export const AdminFilesManager = () => {
     queryKey: ["admin-files", includeDeleted],
     queryFn: async () => {
       const response = await apiFetch(`/api/admin/files?includeDeleted=${includeDeleted ? "true" : "false"}`);
-      const payload: AdminFilesResponse = await response.json();
-      if (!response.ok) {
-        throw new Error(payload.error || "Failed to fetch files");
+      const parsed = await readApiJson<AdminFilesResponse>(response);
+      if (!response.ok || !parsed.success) {
+        throw new Error(parsed.error || "Failed to fetch files");
       }
-      return payload.files || [];
+      return parsed.data.files || [];
     },
     staleTime: 30_000,
     retry: 1
@@ -82,11 +82,11 @@ export const AdminFilesManager = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reason: DEFAULT_DELETE_REASON })
       });
-      const payload = await response.json();
-      if (!response.ok) {
-        throw new Error(payload.error || "Failed to delete file");
+      const parsed = await readApiJson<Record<string, unknown>>(response);
+      if (!response.ok || !parsed.success) {
+        throw new Error(parsed.error || "Failed to delete file");
       }
-      return payload;
+      return parsed.data;
     },
     onSuccess: () => {
       void refresh();
@@ -104,11 +104,11 @@ export const AdminFilesManager = () => {
   const restoreSingle = useMutation({
     mutationFn: async (fileId: string) => {
       const response = await apiFetch(`/api/admin/files/${fileId}/restore`, { method: "POST", body: "{}" });
-      const payload = await response.json();
-      if (!response.ok) {
-        throw new Error(payload.error || "Failed to restore file");
+      const parsed = await readApiJson<Record<string, unknown>>(response);
+      if (!response.ok || !parsed.success) {
+        throw new Error(parsed.error || "Failed to restore file");
       }
-      return payload;
+      return parsed.data;
     },
     onSuccess: () => {
       void refresh();
@@ -130,11 +130,11 @@ export const AdminFilesManager = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fileIds, reason: DEFAULT_DELETE_REASON })
       });
-      const payload = await response.json();
-      if (!response.ok) {
-        throw new Error(payload.error || "Failed to bulk delete files");
+      const parsed = await readApiJson<Record<string, unknown>>(response);
+      if (!response.ok || !parsed.success) {
+        throw new Error(parsed.error || "Failed to bulk delete files");
       }
-      return payload;
+      return parsed.data;
     },
     onSuccess: () => {
       setSelected({});

@@ -86,11 +86,11 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
           <form onSubmit={handleLogin} aria-busy={isLoading} style={{ animation: "auth-enter 700ms ease-out both" }}>
             <div className="mb-4">
               <label htmlFor="username" className="mb-2 block text-sm font-semibold text-[#1f2328] dark:text-[#e6edf3]">
-                Username
+                Admin email
               </label>
               <input
                 id="username"
-                type="text"
+                type="email"
                 autoComplete="email"
                 required
                 value={username}

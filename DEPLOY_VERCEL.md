@@ -27,6 +27,7 @@ NODE_ENV=production
 PORT=3000
 MONGODB_URI=your_mongodb_atlas_connection_string
 JWT_SECRET=replace_with_a_long_random_secret_min_32_chars
+ADMIN_BOOTSTRAP_TOKEN=replace_with_a_long_random_bootstrap_secret
 COOKIE_SECURE=true
 COOKIE_SAME_SITE=strict
 TRUST_PROXY=true
@@ -53,6 +54,7 @@ Notes:
 - Use MongoDB Atlas for production.
 - Make sure HTTPS is enabled on the backend host.
 - If you do not use Google login or email, disable those flags instead of leaving placeholder values.
+- Keep `ADMIN_BOOTSTRAP_TOKEN` secret and only supply it when creating a new production admin.
 
 ## 2. Deploy the user portal to Vercel
 

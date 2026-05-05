@@ -35,10 +35,10 @@ export const NotificationCenter = () => {
   const hasBootstrappedSeenIdsRef = useRef(false);
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const userEmail = getUserEmail().trim().toLowerCase();
   const notificationStorageKey = useMemo(() => {
-    const email = getUserEmail().trim().toLowerCase();
-    return `${SEEN_NOTIFICATIONS_STORAGE_KEY_PREFIX}:${email || "anonymous"}`;
-  }, []);
+    return `${SEEN_NOTIFICATIONS_STORAGE_KEY_PREFIX}:${userEmail || "anonymous"}`;
+  }, [userEmail]);
 
   const notificationsQuery = useQuery({
     queryKey: ["user-notifications"],

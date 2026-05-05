@@ -1,4 +1,5 @@
 const { validatePasswordPolicy, MIN_PASSWORD_LENGTH, isHashedPassword } = require("../utils/password-policy");
+const { hashPassword, verifyPassword, needsPasswordMigration } = require("../utils/password-hash");
 
 describe("Password policy", () => {
   test("accepts strong password", () => {
@@ -41,7 +42,21 @@ describe("Password hash detection", () => {
   });
 });
 
-describe("Planned auth migration behavior", () => {
-  test.todo("auth login accepts hashed passwords");
-  test.todo("legacy plaintext password is auto-migrated to hash on successful login");
+describe("Password hashing helpers", () => {
+  test("hashes passwords using a recognized non-plaintext format", () => {
+    const hashed = hashPassword("Stronger#Pass123");
+    expect(hashed).not.toBe("Stronger#Pass123");
+    expect(isHashedPassword(hashed)).toBe(true);
+  });
+
+  test("verifies a hashed password correctly", () => {
+    const hashed = hashPassword("Stronger#Pass123");
+    expect(verifyPassword("Stronger#Pass123", hashed)).toBe(true);
+    expect(verifyPassword("WrongPass#123", hashed)).toBe(false);
+  });
+
+  test("flags legacy plaintext passwords for migration", () => {
+    expect(needsPasswordMigration("PlainTextPassword!1")).toBe(true);
+    expect(needsPasswordMigration(hashPassword("PlainTextPassword!1"))).toBe(false);
+  });
 });

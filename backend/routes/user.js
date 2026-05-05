@@ -16,6 +16,7 @@ const { recordSecurityEvent } = require("../utils/security-alerts");
 const { recordThreatEvent } = require("../utils/threat-protection");
 const { log } = require("../utils/logger");
 const { validatePasswordPolicy } = require("../utils/password-policy");
+const { hashPassword, verifyPassword, needsPasswordMigration } = require("../utils/password-hash");
 const { validateBody, validateParams, validateQuery, userSchemas } = require("../utils/validation");
 const {
   setAuthCookies,
@@ -593,7 +594,7 @@ userRouter.post('/', validateBody(userSchemas.signup), async(req,res)=>
             firstname,
             lastname,
             email,
-            password
+            password: hashPassword(password)
         });
 
         // audit log
@@ -746,7 +747,7 @@ userRouter.post("/reset-password", userResetPasswordRateLimiter, validateBody(us
       return fail(res, 400, "Invalid or expired password reset token", "RESET_TOKEN_INVALID");
     }
 
-    user.password = password;
+    user.password = hashPassword(password);
     user.passwordResetTokenHash = null;
     user.passwordResetExpiresAt = null;
     user.loginAttempts = 0;
@@ -818,7 +819,7 @@ userRouter.post("/login", userLoginRateLimiter, validateBody(userSchemas.login),
       return fail(res, 429, "Too many failed login attempts. Try again later.", "LOGIN_LOCKED");
     }
 
-    if (user.password !== password) {
+    if (!verifyPassword(password, user.password)) {
       recordAccountActionFailure("login", email);
       await markUserAuthFailure(user);
       await alertSecurity(req, {
@@ -830,6 +831,9 @@ userRouter.post("/login", userLoginRateLimiter, validateBody(userSchemas.login),
         reason: "invalid password"
       });
       return fail(res, 401, "Invalid email or password", "INVALID_CREDENTIALS");
+    }
+    if (needsPasswordMigration(user.password) && typeof user.save === "function") {
+      user.password = hashPassword(password);
     }
 
     if (user.totpSecret) {
@@ -968,7 +972,7 @@ userRouter.get("/auth/google/callback", async (req, res) => {
         firstname: givenName || "Google",
         lastname: familyName || "",
         email,
-        password: randomStrongPassword()
+        password: hashPassword(randomStrongPassword())
       });
       await recordAudit({
         actorType: "user",

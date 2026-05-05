@@ -9,7 +9,10 @@ const nodemailer = (() => {
 
 let transporter = null;
 
-const isEmailEnabled = () => process.env.EMAIL_NOTIFICATIONS_ENABLED === "true";
+const isEmailEnabled = () => {
+  if (process.env.NODE_ENV === "test") return false;
+  return process.env.EMAIL_NOTIFICATIONS_ENABLED === "true";
+};
 const normalizeSmtpPassword = (host, pass) => {
   const value = String(pass || "");
   // Gmail app passwords are often copied in grouped format: "abcd efgh ijkl mnop".

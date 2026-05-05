@@ -53,7 +53,7 @@ const validatePasswordPolicy = (password) => {
   };
 };
 
-const HASHED_PASSWORD_PATTERN = /^(?:\$2[aby]\$\d{2}\$|\$argon2(?:id|i|d)\$)/;
+const HASHED_PASSWORD_PATTERN = /^(?:\$2[aby]\$\d{2}\$|\$argon2(?:id|i|d)\$|scrypt\$)/;
 
 const isHashedPassword = (value) =>
   typeof value === "string" && HASHED_PASSWORD_PATTERN.test(value);

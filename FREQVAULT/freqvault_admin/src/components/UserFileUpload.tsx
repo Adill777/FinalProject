@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Upload, Lock, CheckCircle, ArrowLeft, RefreshCw, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { apiFetch } from "@/lib/api";
+import { apiFetch, readApiJson } from "@/lib/api";
 
 interface User {
   id: string;
@@ -68,12 +68,12 @@ export const UserFileUpload = ({ user, onBack }: UserFileUploadProps) => {
     try {
       setLoadingFiles(true);
       const response = await apiFetch("/api/admin/files");
-      const data: UploadedFilesApiResponse = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to fetch files");
+      const parsed = await readApiJson<UploadedFilesApiResponse>(response);
+      if (!response.ok || !parsed.success) {
+        throw new Error(parsed.error || "Failed to fetch files");
       }
 
-      setUploadedFiles(data.files || []);
+      setUploadedFiles(parsed.data.files || []);
     } catch (error: unknown) {
       toast({
         title: "Unable to load uploaded files",
@@ -126,12 +126,10 @@ export const UserFileUpload = ({ user, onBack }: UserFileUploadProps) => {
         body: formData,
       });
 
-      if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.error || "Upload failed");
+      const parsed = await readApiJson<Record<string, unknown>>(res);
+      if (!res.ok || !parsed.success) {
+        throw new Error(parsed.error || "Upload failed");
       }
-
-      await res.json();
 
       setIsSuccess(true);
       await fetchUploadedFiles();
@@ -180,9 +178,9 @@ export const UserFileUpload = ({ user, onBack }: UserFileUploadProps) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reason })
       });
-      const data: { error?: string; message?: string } = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to delete file");
+      const parsed = await readApiJson<{ message?: string }>(response);
+      if (!response.ok || !parsed.success) {
+        throw new Error(parsed.error || "Failed to delete file");
       }
 
       setDeleteReasonByFileId((prev) => {
@@ -193,7 +191,7 @@ export const UserFileUpload = ({ user, onBack }: UserFileUploadProps) => {
       await fetchUploadedFiles();
       toast({
         title: "File removed",
-        description: "Uploaded file and related access requests were removed successfully."
+        description: parsed.data.message || "Uploaded file and related access requests were removed successfully."
       });
     } catch (error: unknown) {
       toast({

@@ -6,7 +6,8 @@
 3. `COOKIE_SAME_SITE=strict`
 4. `CORS_ORIGINS` set to exact frontend origins only
 5. Strong `JWT_SECRET` (>= 32 chars random)
-6. Non-placeholder `GOOGLE_CLIENT_SECRET`, `SMTP_PASS`
+6. Strong `ADMIN_BOOTSTRAP_TOKEN` configured for admin provisioning
+7. Non-placeholder `GOOGLE_CLIENT_SECRET`, `SMTP_PASS`
 
 ## Transport and Edge Security
 1. Force HTTPS at reverse proxy/load balancer.
@@ -36,6 +37,7 @@
 2. Enable centralized structured logs with retention controls.
 3. Backup and disaster recovery plan for MongoDB and audit data.
 4. Restrict admin access by network and MFA policy.
+5. Use bootstrap-token-based admin provisioning only for controlled setup flows.
 
 ## Release Gate (Must Pass)
 1. Backend security regression tests.

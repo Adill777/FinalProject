@@ -12,11 +12,15 @@ describe("Admin auth flow", () => {
   let app;
   let dbMock;
   let usersFindExec;
+  let adminPassword;
+  let adminSave;
 
   beforeEach(() => {
     jest.resetModules();
     process.env.JWT_SECRET = "test-secret";
     process.env.NODE_ENV = "test";
+    adminPassword = "admin-pass";
+    adminSave = jest.fn().mockResolvedValue(undefined);
 
     usersFindExec = jest.fn().mockResolvedValue([
       { _id: "u1", email: "alice@example.com", status: "active" },
@@ -29,13 +33,15 @@ describe("Admin auth flow", () => {
           return {
             _id: "a1",
             email: "admin@example.com",
-            password: "admin-pass",
+            password: adminPassword,
+            save: adminSave
           };
         }),
         findById: jest.fn(async (id) => ({
           _id: id,
           email: "admin@example.com",
-          password: "admin-pass",
+          password: adminPassword,
+          save: adminSave
         })),
       },
       User: {
@@ -96,6 +102,88 @@ describe("Admin auth flow", () => {
     expect(res.body.admin.email).toBe("admin@example.com");
     expect(getCookie(res.headers["set-cookie"], "admin_refresh_token")).toContain("admin_refresh_token=");
     expect(getCookie(res.headers["set-cookie"], "admin_csrf_token")).toContain("admin_csrf_token=");
+  });
+
+  test("admin creation remains available in test/dev without bootstrap token", async () => {
+    dbMock.Admin.findOne = jest.fn(async ({ email }) => (email === "newadmin@example.com" ? null : null));
+    dbMock.Admin.create = jest.fn(async (payload) => ({
+      _id: "a2",
+      id: "a2",
+      ...payload
+    }));
+
+    const res = await request(app).post("/api/admin/").send({
+      firstname: "Demo",
+      lastname: "Admin",
+      email: "newadmin@example.com",
+      password: "StrongPass#1234"
+    });
+
+    expect(res.status).toBe(200);
+    expect(dbMock.Admin.create).toHaveBeenCalled();
+  });
+
+  test("login accepts hashed admin passwords", async () => {
+    const { hashPassword } = require("../utils/password-hash");
+    adminPassword = hashPassword("admin-pass");
+
+    const res = await request(app).post("/api/admin/login").send({
+      email: "admin@example.com",
+      password: "admin-pass",
+    });
+
+    expect(res.status).toBe(200);
+    expect(adminSave).not.toHaveBeenCalled();
+  });
+
+  test("admin creation requires bootstrap token in production", async () => {
+    process.env.NODE_ENV = "production";
+    process.env.ADMIN_BOOTSTRAP_TOKEN = "bootstrap-secret";
+    jest.resetModules();
+
+    const prodDbMock = {
+      ...dbMock,
+      Admin: {
+        ...dbMock.Admin,
+        findOne: jest.fn(async ({ email }) => (email === "secureadmin@example.com" ? null : null)),
+        create: jest.fn(async (payload) => ({
+          _id: "a3",
+          id: "a3",
+          ...payload
+        }))
+      }
+    };
+
+    jest.doMock("../models/db.js", () => prodDbMock);
+    jest.doMock("../models/db", () => prodDbMock);
+
+    const prodAdminRouter = require("../routes/admin");
+    const prodApp = express();
+    prodApp.use(express.json());
+    prodApp.use("/api/admin", prodAdminRouter);
+
+    const blocked = await request(prodApp).post("/api/admin/").send({
+      firstname: "Secure",
+      lastname: "Admin",
+      email: "secureadmin@example.com",
+      password: "StrongPass#1234"
+    });
+
+    expect(blocked.status).toBe(403);
+    expect(blocked.body.code).toBe("ADMIN_BOOTSTRAP_TOKEN_INVALID");
+
+    const allowed = await request(prodApp)
+      .post("/api/admin/")
+      .set("X-Admin-Bootstrap-Token", "bootstrap-secret")
+      .send({
+        firstname: "Secure",
+        lastname: "Admin",
+        email: "secureadmin@example.com",
+        password: "StrongPass#1234"
+      });
+
+    expect(allowed.status).toBe(200);
+    expect(prodDbMock.Admin.create).toHaveBeenCalled();
   });
 
   test("protected admin route rejects missing token and accepts valid bearer token", async () => {

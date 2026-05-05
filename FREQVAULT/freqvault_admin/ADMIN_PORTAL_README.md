@@ -23,11 +23,14 @@ Default local URL:
 
 ## Backend dependency
 
-The admin portal requires the backend API to be running and reachable through:
+The admin portal requires the backend API to be running and reachable through the local Vite proxy:
 
 ```env
-VITE_API_BASE_URL=http://localhost:3000
+VITE_API_BASE_URL=
+VITE_DEV_API_PROXY_TARGET=http://localhost:3000
 ```
+
+Leave `VITE_API_BASE_URL` empty in production so the app uses same-origin `/api` requests.
 
 ## Important note
 

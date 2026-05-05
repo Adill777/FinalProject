@@ -18,6 +18,7 @@ const { recordThreatEvent } = require("../utils/threat-protection");
 const { log } = require("../utils/logger");
 const { computeRetentionExpiry, computeSoftDeletePurgeAt, markFileAsSoftDeleted, restoreSoftDeletedFile } = require("../utils/governance");
 const { validatePasswordPolicy } = require("../utils/password-policy");
+const { hashPassword, verifyPassword, needsPasswordMigration } = require("../utils/password-hash");
 const { validateBody, validateParams, validateQuery, adminSchemas } = require("../utils/validation");
 const {
   setAuthCookies,
@@ -249,6 +250,20 @@ const adminRefreshRateLimiter = rateLimit({
   legacyHeaders: false,
   message: { error: "Too many refresh attempts. Please try again later." }
 });
+const ADMIN_BOOTSTRAP_TOKEN = String(process.env.ADMIN_BOOTSTRAP_TOKEN || "").trim();
+const isProduction = process.env.NODE_ENV === "production";
+
+const getAdminBootstrapToken = (req) => {
+  const headerValue = req.headers["x-admin-bootstrap-token"];
+  if (Array.isArray(headerValue)) {
+    return String(headerValue[0] || "").trim();
+  }
+  if (typeof headerValue === "string" && headerValue.trim()) {
+    return headerValue.trim();
+  }
+  const bodyValue = req.body && typeof req.body === "object" ? req.body.bootstrapToken : "";
+  return String(bodyValue || "").trim();
+};
 
 const createAccessToken = (admin) => {
   const jti = crypto.randomUUID();
@@ -535,8 +550,33 @@ adminRouter.post('/', validateBody(adminSchemas.signup), async(req,res)=>
         const{firstname,lastname,email,password}=req.body;
         if(!email || !password || !firstname){
             return fail(res, 400, "Missing required fields", "VALIDATION_ERROR");
-            }
-
+        }
+        if (isProduction) {
+          if (!ADMIN_BOOTSTRAP_TOKEN) {
+            return fail(
+              res,
+              503,
+              "Admin provisioning is disabled until ADMIN_BOOTSTRAP_TOKEN is configured.",
+              "ADMIN_PROVISIONING_DISABLED"
+            );
+          }
+          const suppliedBootstrapToken = getAdminBootstrapToken(req);
+          if (!suppliedBootstrapToken || suppliedBootstrapToken !== ADMIN_BOOTSTRAP_TOKEN) {
+            await alertSecurity(req, {
+              eventType: "admin_provisioning_denied",
+              code: "ADMIN_BOOTSTRAP_TOKEN_INVALID",
+              actorType: "admin",
+              actorEmail: String(email || ""),
+              reason: "invalid or missing admin bootstrap token"
+            });
+            return fail(
+              res,
+              403,
+              "Admin provisioning requires a valid bootstrap token.",
+              "ADMIN_BOOTSTRAP_TOKEN_INVALID"
+            );
+          }
+        }
         const passwordPolicy = validatePasswordPolicy(password);
         if (!passwordPolicy.valid) {
           return fail(res, 400, passwordPolicy.errors[0], "WEAK_PASSWORD");
@@ -550,7 +590,7 @@ adminRouter.post('/', validateBody(adminSchemas.signup), async(req,res)=>
             firstname,
             lastname,
             email,
-            password
+            password: hashPassword(password)
         });
         return ok(res, {
             message : "admin created successfully",
@@ -587,7 +627,7 @@ adminRouter.post('/login', adminLoginRateLimiter, validateBody(adminSchemas.logi
             });
             return fail(res, 401, "Invalid email or password", "INVALID_CREDENTIALS");
         }
-        if(Admindata.password!==password){
+        if(!verifyPassword(password, Admindata.password)){
             await alertSecurity(req, {
               eventType: "admin_login_invalid_credentials",
               code: "LOGIN_BAD_PASSWORD",
@@ -597,6 +637,10 @@ adminRouter.post('/login', adminLoginRateLimiter, validateBody(adminSchemas.logi
               reason: "invalid admin password"
             });
             return fail(res, 401, "Invalid email or password", "INVALID_CREDENTIALS");
+        }
+        if (needsPasswordMigration(Admindata.password) && typeof Admindata.save === "function") {
+          Admindata.password = hashPassword(password);
+          await Admindata.save();
         }
         const ipAddress = getClientIp(req);
         const userAgent = String(req.headers["user-agent"] || "");
@@ -610,18 +654,6 @@ adminRouter.post('/login', adminLoginRateLimiter, validateBody(adminSchemas.logi
         });
 
         setAuthCookies(res, "admin", refresh.token, refresh.csrfToken);
-        return ok(res, {
-          message : "login successfull",
-          token: access.token,
-          accessToken: access.token,
-          tokenType: "Bearer",
-          accessTokenTtl: ACCESS_TOKEN_TTL,
-          admin: {
-            id: Admindata._id,
-            email: Admindata.email
-          }
-        }, "login successfull");
-
         await recordAudit({
           actorType: "admin",
           actorId: Admindata._id.toString(),
@@ -634,6 +666,17 @@ adminRouter.post('/login', adminLoginRateLimiter, validateBody(adminSchemas.logi
           ipAddress,
           metadata: { userAgent }
         });
+        return ok(res, {
+          message : "login successfull",
+          token: access.token,
+          accessToken: access.token,
+          tokenType: "Bearer",
+          accessTokenTtl: ACCESS_TOKEN_TTL,
+          admin: {
+            id: Admindata._id,
+            email: Admindata.email
+          }
+        }, "login successfull");
     }catch(error){
         return fail(res, 500, "Login failed", "LOGIN_FAILED");
     }
@@ -1496,8 +1539,11 @@ adminRouter.post("/reject-request/:requestId", requireAdminAuth, validateParams(
 adminRouter.get("/pending-requests", requireAdminAuth, async (req, res) => {
     try {
         await expireStaleApprovals();
-        // fetch all pending requests
-        const pendingRequests = await Request.find({ status: "pending" }).lean();
+        const pendingRequests = await Request.find({
+            status: { $in: ["pending", "approved", "rejected", "denied", "expired"] }
+        })
+            .sort({ requestedAt: -1, createdAt: -1 })
+            .lean();
 
         // gather file ids and look up their GridFS entries for size
         const fileIds = pendingRequests.map(r => r.fileId);

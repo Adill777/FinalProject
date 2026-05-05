@@ -1,4 +1,6 @@
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+const configuredApiBaseUrl = String(import.meta.env.VITE_API_BASE_URL || "").trim();
+
+export const API_BASE_URL = configuredApiBaseUrl.replace(/\/+$/, "");
 
 export const USER_EMAIL_KEY = "email";
 const AUTH_EVENT = "user-auth-changed";

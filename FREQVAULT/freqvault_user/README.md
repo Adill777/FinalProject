@@ -33,11 +33,18 @@ Default local port:
 
 ## Environment
 
-Set the API base URL with:
+Use the same-origin API path in production and the dev proxy locally:
 
 ```env
-VITE_API_BASE_URL=http://localhost:3000
+VITE_API_BASE_URL=
+VITE_DEV_API_PROXY_TARGET=http://localhost:3000
+VITE_ADMIN_PORTAL_URL=http://localhost:8080/admin
 ```
+
+Notes:
+
+- Leave `VITE_API_BASE_URL` empty so the app uses `/api` requests in production.
+- During local development, the Vite server proxies `/api` to `VITE_DEV_API_PROXY_TARGET`.
 
 ## Build
 

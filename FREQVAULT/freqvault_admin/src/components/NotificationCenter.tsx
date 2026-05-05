@@ -30,10 +30,10 @@ export const NotificationCenter = () => {
   const { toast } = useToast();
   const { isAuthenticated, isBootstrapping } = useAuth();
   const notificationsEnabled = isAuthenticated && !isBootstrapping;
+  const adminEmail = getAdminEmail().trim().toLowerCase();
   const notificationStorageKey = useMemo(() => {
-    const email = getAdminEmail().trim().toLowerCase();
-    return `${SEEN_NOTIFICATIONS_STORAGE_KEY_PREFIX}:${email || "anonymous"}`;
-  }, []);
+    return `${SEEN_NOTIFICATIONS_STORAGE_KEY_PREFIX}:${adminEmail || "anonymous"}`;
+  }, [adminEmail]);
 
   const notificationsQuery = useQuery({
     queryKey: ["admin-notifications"],

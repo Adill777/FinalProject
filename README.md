@@ -79,8 +79,14 @@ Use `backend/.env.example` as the starting point for backend configuration.
 Frontend apps use:
 
 ```env
-VITE_API_BASE_URL=http://localhost:3000
+VITE_API_BASE_URL=
+VITE_DEV_API_PROXY_TARGET=http://localhost:3000
 ```
+
+Notes:
+
+- Leave `VITE_API_BASE_URL` empty to use same-origin `/api` requests in deployed environments.
+- During local development, the Vite dev servers proxy `/api` to `VITE_DEV_API_PROXY_TARGET`.
 
 ## Deployment
 

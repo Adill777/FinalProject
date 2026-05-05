@@ -5,6 +5,7 @@
 - [ ] Production env uses non-placeholder secret values only.
 - [ ] `COOKIE_SECURE=true` and `COOKIE_SAME_SITE=strict` in production.
 - [ ] `CORS_ORIGINS` is explicit and environment-specific.
+- [ ] `ADMIN_BOOTSTRAP_TOKEN` is configured in production and used only for controlled admin provisioning.
 
 ## 2. Auth and Session Controls
 - [ ] Access tokens are short-lived and refresh token rotation is enabled.

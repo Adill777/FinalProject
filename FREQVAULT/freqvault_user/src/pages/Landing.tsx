@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { ProfessionalButton } from "@/components/ui/professional-button";
 
+const ADMIN_PORTAL_URL = import.meta.env.VITE_ADMIN_PORTAL_URL || "http://localhost:8080/admin";
+
 const Landing = () => {
   const navigate = useNavigate();
 
@@ -31,7 +33,7 @@ const Landing = () => {
             <div className="space-y-4">
               <ProfessionalButton
                 size="lg"
-                onClick={() => navigate("/user/login")}
+                onClick={() => navigate("/login")}
                 className="w-full"
               >
                 Login
@@ -39,7 +41,7 @@ const Landing = () => {
               <ProfessionalButton
                 variant="outline"
                 size="lg"
-                onClick={() => navigate("/user/signup")}
+                onClick={() => navigate("/signup")}
                 className="w-full"
               >
                 Sign Up
@@ -59,7 +61,7 @@ const Landing = () => {
             <ProfessionalButton
               variant="secondary"
               size="lg"
-              onClick={() => navigate("/admin/login")}
+              onClick={() => window.location.assign(ADMIN_PORTAL_URL)}
               className="w-full"
             >
               Access Admin Portal

@@ -11,7 +11,7 @@ import {
   Search,
   TriangleAlert
 } from "lucide-react";
-import { apiFetch } from "@/lib/api";
+import { apiFetch, readApiJson } from "@/lib/api";
 import { PageHeader } from "@/components/PageHeader";
 import { StateCard } from "@/components/StateCard";
 import { StatusBadge } from "@/components/StatusBadge";
@@ -66,9 +66,9 @@ export const AuditLogViewer = () => {
       setLoading(true);
       setError(null);
       const res = await apiFetch("/api/admin/audit-log");
-      const data: { logs?: AuditLogEntry[]; error?: string } = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to fetch audit logs");
-      setLogs(data.logs || []);
+      const parsed = await readApiJson<{ logs?: AuditLogEntry[] }>(res);
+      if (!res.ok || !parsed.success) throw new Error(parsed.error || "Failed to fetch audit logs");
+      setLogs(parsed.data.logs || []);
     } catch (err: unknown) {
       const message = getErrorMessage(err);
       setError(message);

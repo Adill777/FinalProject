@@ -6,6 +6,8 @@ import { useToast } from "@/hooks/use-toast";
 import { API_BASE_URL, readApiJson } from "@/lib/api";
 import AuthBackdrop from "@/components/AuthBackdrop";
 
+const ADMIN_PORTAL_URL = import.meta.env.VITE_ADMIN_PORTAL_URL || "http://localhost:8080/admin";
+
 const inputClassName =
   "h-8 w-full rounded-md border border-[#d0d7de] bg-white px-3 text-sm text-[#1f2328] shadow-[inset_0_1px_0_rgba(208,215,222,0.2)] transition focus:border-[#fb8f44] focus:outline-none focus:ring-2 focus:ring-[#fb8f44]/30";
 
@@ -42,8 +44,7 @@ const AdminLogin = () => {
         throw new Error(parsed.error || data.error || data.message || "Invalid admin credentials");
       }
 
-      if (data.token && data.admin?.email) {
-        localStorage.setItem("adminAuthToken", data.token);
+      if (data.admin?.email) {
         localStorage.setItem("adminEmail", data.admin.email);
       }
 
@@ -51,7 +52,7 @@ const AdminLogin = () => {
         title: "Admin Login Successful",
         description: "Welcome to FreqVault Admin Portal!"
       });
-      navigate("/admin/dashboard");
+      window.location.assign(ADMIN_PORTAL_URL);
     } catch (error: unknown) {
       toast({
         title: "Login Failed",
@@ -142,7 +143,7 @@ const AdminLogin = () => {
           <div className="mt-6 text-center" style={{ animation: "auth-enter 780ms ease-out both" }}>
             <button
               type="button"
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/login")}
               aria-label="Back to user portal"
               className="text-sm text-[#0c70f2] transition-colors duration-200 hover:text-[#fb8f44] hover:underline focus:outline-none focus:ring-2 focus:ring-[#fb8f44]/30"
             >

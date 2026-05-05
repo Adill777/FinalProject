@@ -1,6 +1,7 @@
 const express = require("express");
 const request = require("supertest");
 const crypto = require("crypto");
+const { isHashedPassword } = require("../utils/password-policy");
 
 describe("Forgot password security controls", () => {
   beforeEach(() => {
@@ -118,6 +119,7 @@ describe("Forgot password security controls", () => {
 
     expect(res.status).toBe(200);
     expect(userDoc.save).toHaveBeenCalled();
+    expect(isHashedPassword(userDoc.password)).toBe(true);
     expect(userDoc.passwordResetTokenHash).toBeNull();
     expect(userDoc.passwordResetExpiresAt).toBeNull();
     expect(dbMock.RefreshToken.updateMany).toHaveBeenCalled();
@@ -196,4 +198,3 @@ describe("Forgot password security controls", () => {
     expect(keyGenRes.body.error).toBe("Forbidden");
   });
 });
-

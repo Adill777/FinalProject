@@ -1,4 +1,5 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+const configuredApiBaseUrl = String(import.meta.env.VITE_API_BASE_URL || "").trim();
+const API_BASE = configuredApiBaseUrl.replace(/\/+$/, "");
 
 export const ADMIN_EMAIL_KEY = "adminEmail";
 const AUTH_EVENT = "admin-auth-changed";
@@ -80,7 +81,6 @@ export const setAdminSession = (accessToken: string, email: string) => {
 
 export const clearAdminSession = () => {
   adminAccessToken = null;
-  localStorage.removeItem("isAuthenticated");
   localStorage.removeItem(ADMIN_EMAIL_KEY);
   window.dispatchEvent(new Event(AUTH_EVENT));
 };
