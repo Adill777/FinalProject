@@ -536,7 +536,7 @@ const expireStaleApprovals = async () => {
           fileId: String(reqDoc.fileId),
           expiresAt: reqDoc.expiresAt || null
         },
-        emailSubject: "FreqVault access request expired",
+        emailSubject: "Aeronox access request expired",
         emailText: "Your approved access request has expired. Please submit a new request if you still need access."
       })
     )
@@ -1310,7 +1310,7 @@ adminRouter.delete(
               reason,
               purgeAt: lifecycle.purgeAt
             },
-            emailSubject: "FreqVault file removed",
+        emailSubject: "Aeronox file removed",
             emailText: `A protected file was removed by an administrator. Reason: ${reason}`
           })
         )
@@ -1464,7 +1464,7 @@ adminRouter.post("/approve-access", requireAdminAuth, validateBody(adminSchemas.
             fileId: String(request.fileId),
             expiresAt: request.expiresAt || null
           },
-          emailSubject: "FreqVault access request approved",
+          emailSubject: "Aeronox access request approved",
           emailText: "Your access request has been approved. You can access the file until the approval expires."
         });
 
@@ -1527,7 +1527,7 @@ adminRouter.post("/reject-request/:requestId", requireAdminAuth, validateParams(
             requestId: request._id.toString(),
             fileId: String(request.fileId)
           },
-          emailSubject: "FreqVault access request rejected",
+          emailSubject: "Aeronox access request rejected",
           emailText: "Your access request was rejected. Please contact an administrator if you need clarification."
         });
     } catch (err) {
@@ -1656,7 +1656,7 @@ adminRouter.post("/users/:userId/suspend", requireAdminAuth, validateParams(admi
       title: "Account Suspended",
       message: "Your account has been suspended by an administrator.",
       metadata: { reason },
-      emailSubject: "FreqVault account suspended",
+      emailSubject: "Aeronox account suspended",
       emailText: `Your account has been suspended. Reason: ${reason}`
     });
 
@@ -1714,7 +1714,7 @@ adminRouter.post("/users/:userId/unsuspend", requireAdminAuth, validateParams(ad
       title: "Account Reactivated",
       message: "Your account has been reactivated by an administrator.",
       metadata: {},
-      emailSubject: "FreqVault account reactivated",
+      emailSubject: "Aeronox account reactivated",
       emailText: "Your account has been reactivated and you can log in again."
     });
 
@@ -1776,7 +1776,7 @@ adminRouter.delete("/users/:userId", requireAdminAuth, validateParams(adminSchem
       title: "Account Deleted",
       message: "Your account has been deleted by an administrator.",
       metadata: { reason },
-      emailSubject: "FreqVault account deleted",
+      emailSubject: "Aeronox account deleted",
       emailText: `Your account has been deleted. Reason: ${reason}`
     });
 

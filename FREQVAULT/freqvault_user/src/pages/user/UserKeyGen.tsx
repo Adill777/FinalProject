@@ -73,7 +73,7 @@ const UserKeyGen = () => {
   const downloadPrivateKey = () => {
     if (!keys?.secretKey) return;
     const content = [
-      "FreqVault Private Key",
+      "Aeronox Private Key",
       `Generated At: ${new Date().toISOString()}`,
       "",
       keys.secretKey
@@ -82,7 +82,7 @@ const UserKeyGen = () => {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `freqvault-private-key-${new Date().toISOString().slice(0, 10)}.txt`;
+    link.download = `aeronox-private-key-${new Date().toISOString().slice(0, 10)}.txt`;
     link.click();
     window.URL.revokeObjectURL(url);
     toast({ title: "Private key file downloaded" });

@@ -1,4 +1,4 @@
-# FreqVault Project Change Log
+# Aeronox Project Change Log
 
 This file tracks major implementation changes so project context is not lost over time.
 

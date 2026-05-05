@@ -1,6 +1,6 @@
-# FreqVault
+# Aeronox
 
-FreqVault is a confidential file-access platform with separate user and admin portals, a Node/Express backend, approval-based access control, OTP flows, audit logging, and protected-view security controls.
+Aeronox is a confidential file-access platform with separate user and admin portals, a Node/Express backend, approval-based access control, OTP flows, audit logging, and protected-view security controls.
 
 ## Repository structure
 

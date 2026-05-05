@@ -14,7 +14,7 @@ const PrivacyPolicy = () => {
         </div>
 
         <ProfessionalCard className="p-6 sm:p-8 md:p-10">
-          <h1 className="text-3xl font-bold text-foreground">FreqVault Privacy Policy</h1>
+          <h1 className="text-3xl font-bold text-foreground">Aeronox Privacy Policy</h1>
           <p className="mt-2 text-sm text-muted-foreground">Effective date: March 4, 2026</p>
 
           <div className="mt-8 space-y-6 text-sm leading-6 text-foreground/90">
@@ -65,4 +65,3 @@ const PrivacyPolicy = () => {
 };
 
 export default PrivacyPolicy;
-

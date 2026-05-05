@@ -1,8 +1,8 @@
 {
-  "name": "freqvault-monorepo",
+  "name": "aeronox-monorepo",
   "private": true,
   "version": "1.0.0",
-  "description": "FreqVault monorepo containing backend, user portal, admin portal, and test assets.",
+  "description": "Aeronox monorepo containing backend, user portal, admin portal, and test assets.",
   "scripts": {
     "dev:user": "npm run dev --prefix FREQVAULT/freqvault_user",
     "dev:admin": "npm run dev --prefix FREQVAULT/freqvault_admin",

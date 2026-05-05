@@ -84,7 +84,7 @@ function formatBytes(bytes: number) {
 
 const VIEW_TIME_SECONDS = 2 * 60; // 2 minutes
 const SECURITY_CURTAIN_MONITORING_EVENT = "security-curtain-monitoring";
-const SECURITY_PROFILE_STORAGE_KEY = "freqvault_security_profile";
+const SECURITY_PROFILE_STORAGE_KEY = "aeronox_security_profile";
 const normalizeRequestStatus = (value?: string): FileItem["requestStatus"] => {
   const normalized = (value || "").toLowerCase();
   if (normalized === "pending" || normalized === "approved" || normalized === "rejected") {
@@ -169,7 +169,7 @@ const UserFiles = () => {
         id: f.fileId,
         name: f.filename,
         size: f.size ? formatBytes(f.size) : "Unknown",
-        uploadedBy: f.uploadedBy || "admin@freqvault.com",
+        uploadedBy: f.uploadedBy || "admin@aeronox.com",
         hasAccess: deriveHasAccess(f, requestStatus),
         isDecrypted: false
       }});

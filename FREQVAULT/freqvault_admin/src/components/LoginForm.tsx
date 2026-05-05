@@ -43,7 +43,7 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
       if (response.ok && accessToken && email) {
         toast({
           title: "Login Successful",
-          description: "Welcome to FreqVault Admin Portal",
+          description: "Welcome to Aeronox Admin Portal",
         });
         onLogin(accessToken, email);
       } else {
@@ -74,7 +74,7 @@ export const LoginForm = ({ onLogin }: LoginFormProps) => {
       <div className="relative z-10 mb-6 text-center" style={{ animation: "auth-enter 420ms ease-out both" }}>
         <Shield className="mx-auto mb-6 h-12 w-12 text-[#24292f] dark:text-[#e6edf3]" strokeWidth={1.5} />
         <h1 className="text-2xl font-light tracking-tight text-[#1f2328] dark:text-[#e6edf3]">
-          FreqVault Admin
+          Aeronox Admin
         </h1>
       </div>
 

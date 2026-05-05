@@ -1,7 +1,7 @@
 # Security Verification Report
 
 ## Project
-- Portal: FreqVault
+- Portal: Aeronox
 - Validation date: 2026-03-05
 - Scope: backend API auth/session/upload/notification/reset-password flows
 

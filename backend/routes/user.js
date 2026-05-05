@@ -688,7 +688,7 @@ userRouter.post("/forgot-password", userForgotPasswordRateLimiter, validateBody(
         metadata: {
           expiresInMinutes: USER_PASSWORD_RESET_TTL_MINUTES
         },
-        emailSubject: "FreqVault password reset request",
+        emailSubject: "Aeronox password reset request",
         emailText: `Use this link to reset your password: ${resetUrl.toString()}\n\nThis link expires in ${USER_PASSWORD_RESET_TTL_MINUTES} minutes.`
       });
       emailDelivered = Boolean(notifyResult?.emailDelivered);
@@ -1317,7 +1317,7 @@ userRouter.post("/generate-2fa", requireUserAuth, validateBody(userSchemas.email
       return fail(res, 400, "2FA already enabled.", "2FA_ALREADY_ENABLED");
     }
 
-    const secret = speakeasy.generateSecret({ name: `FreqVault (${email})` });
+    const secret = speakeasy.generateSecret({ name: `Aeronox (${email})` });
     user.totpSecret = secret.base32;
     await user.save();
 
@@ -1442,7 +1442,7 @@ userRouter.post("/request-access", userRequestAccessRateLimiter, requireUserAuth
             requestId: request._id.toString(),
             fileId: String(fileId)
           },
-          emailSubject: "FreqVault access request submitted",
+          emailSubject: "Aeronox access request submitted",
           emailText: "Your access request has been submitted and is waiting for admin review."
         });
 
@@ -1461,7 +1461,7 @@ userRouter.post("/request-access", userRequestAccessRateLimiter, requireUserAuth
                 requesterEmail: email,
                 fileId: String(fileId)
               },
-              emailSubject: "New FreqVault access request",
+              emailSubject: "New Aeronox access request",
               emailText: `User ${email} submitted a new access request.`
             })
           )
@@ -1566,7 +1566,7 @@ userRouter.post("/decrypt", userDecryptRateLimiter, requireUserAuth, validateBod
             fileId: String(fileId),
             expiresAt: access.expiresAt || null
           },
-          emailSubject: "FreqVault access expired",
+          emailSubject: "Aeronox access expired",
           emailText: "Your approved access request expired. Please submit a new request."
         });
       } catch (_notifyErr) {

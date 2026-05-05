@@ -50,7 +50,7 @@ const AdminLogin = () => {
 
       toast({
         title: "Admin Login Successful",
-        description: "Welcome to FreqVault Admin Portal!"
+        description: "Welcome to Aeronox Admin Portal!"
       });
       window.location.assign(ADMIN_PORTAL_URL);
     } catch (error: unknown) {
@@ -73,7 +73,7 @@ const AdminLogin = () => {
       <AuthBackdrop tone="admin" />
       <div className="relative z-10 mx-auto flex w-full max-w-[340px] flex-col items-center">
         <div className="mb-4 text-center" style={{ animation: "auth-enter 420ms ease-out both" }}>
-          <h1 className="text-[32px] font-light tracking-[-0.5px] text-[#1f2328]">FreqVault</h1>
+          <h1 className="text-[32px] font-light tracking-[-0.5px] text-[#1f2328]">Aeronox</h1>
           <p className="mt-1 text-2xl font-light leading-8 text-[#1f2328]">Admin sign in</p>
         </div>
 

@@ -9,10 +9,10 @@ const Landing = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-accent/30 to-secondary flex items-center justify-center p-8">
       <div className="text-center animate-fade-in-up">
-        {/* FreqVault Logo */}
+        {/* Aeronox Logo */}
         <div className="mb-16">
-          <h1 className="freqvault-logo text-8xl font-bold mb-6">
-            FreqVault
+          <h1 className="aeronox-logo text-8xl font-bold mb-6">
+            Aeronox
           </h1>
           <p className="text-xl text-muted-foreground font-light max-w-md mx-auto">
             Professional Secure File Transmission System

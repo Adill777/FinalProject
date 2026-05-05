@@ -16,8 +16,8 @@ describe("logAudit", () => {
 
     expect(create).toHaveBeenCalledTimes(1);
     const payload = create.mock.calls[0][0];
-    expect(payload.actorEmail).toBe("system@freqvault.local");
-    expect(payload.adminEmail).toBe("system@freqvault.local");
+    expect(payload.actorEmail).toBe("system@aeronox.local");
+    expect(payload.adminEmail).toBe("system@aeronox.local");
     expect(payload.action).toBe("security_alert");
   });
 

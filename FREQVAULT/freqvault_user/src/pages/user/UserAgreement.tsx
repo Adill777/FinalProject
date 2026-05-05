@@ -14,7 +14,7 @@ const UserAgreement = () => {
         </div>
 
         <ProfessionalCard className="p-6 sm:p-8 md:p-10">
-          <h1 className="text-3xl font-bold text-foreground">FreqVault User Agreement</h1>
+          <h1 className="text-3xl font-bold text-foreground">Aeronox User Agreement</h1>
           <p className="mt-2 text-sm text-muted-foreground">Effective date: March 4, 2026</p>
 
           <div className="mt-8 space-y-6 text-sm leading-6 text-foreground/90">
@@ -29,7 +29,7 @@ const UserAgreement = () => {
             <section>
               <h2 className="text-base font-semibold">2. Acceptable Use</h2>
               <p>
-                You may use FreqVault only for authorized business or academic purposes. Misuse, unauthorized
+                You may use Aeronox only for authorized business or academic purposes. Misuse, unauthorized
                 access attempts, and policy violations are prohibited.
               </p>
             </section>
@@ -65,4 +65,3 @@ const UserAgreement = () => {
 };
 
 export default UserAgreement;
-

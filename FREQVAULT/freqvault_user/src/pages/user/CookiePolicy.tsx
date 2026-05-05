@@ -14,14 +14,14 @@ const CookiePolicy = () => {
         </div>
 
         <ProfessionalCard className="p-6 sm:p-8 md:p-10">
-          <h1 className="text-3xl font-bold text-foreground">FreqVault Cookie Policy</h1>
+          <h1 className="text-3xl font-bold text-foreground">Aeronox Cookie Policy</h1>
           <p className="mt-2 text-sm text-muted-foreground">Effective date: March 4, 2026</p>
 
           <div className="mt-8 space-y-6 text-sm leading-6 text-foreground/90">
             <section>
               <h2 className="text-base font-semibold">1. What Cookies We Use</h2>
               <p>
-                FreqVault uses essential cookies for session management, CSRF protection, authentication continuity,
+                Aeronox uses essential cookies for session management, CSRF protection, authentication continuity,
                 and basic security controls.
               </p>
             </section>
@@ -65,4 +65,3 @@ const CookiePolicy = () => {
 };
 
 export default CookiePolicy;
-

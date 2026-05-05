@@ -1,8 +1,8 @@
 {
-  "name": "freqvault-backend",
+  "name": "aeronox-backend",
   "version": "1.0.0",
   "private": true,
-  "description": "Express backend for FreqVault authentication, file access workflows, and audit logging.",
+  "description": "Express backend for Aeronox authentication, file access workflows, and audit logging.",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
@@ -12,7 +12,7 @@
     "test:e2e": "playwright test -c playwright.config.ts",
     "security:audit": "npm audit --audit-level=critical"
   },
-  "author": "FreqVault",
+  "author": "Aeronox",
   "license": "UNLICENSED",
   "dependencies": {
     "cors": "^2.8.5",

@@ -94,7 +94,7 @@ const UserLogin = () => {
       if (loginSucceeded) {
         toast({
           title: "Login Successful",
-          description: "Welcome back to FreqVault!"
+          description: "Welcome back to Aeronox!"
         });
 
         if (data.accessToken || data.token) {
@@ -144,7 +144,7 @@ const UserLogin = () => {
       <div className="relative z-10 mb-6 text-center" style={{ animation: "auth-enter 420ms ease-out both" }}>
         <Shield className="mx-auto mb-6 h-12 w-12 text-[#24292f] dark:text-[#e6edf3]" strokeWidth={1.5} />
         <h1 className="text-2xl font-light tracking-tight text-[#1f2328] dark:text-[#e6edf3]">
-          Sign in to FreqVault
+          Sign in to Aeronox
         </h1>
       </div>
 
@@ -248,7 +248,7 @@ const UserLogin = () => {
           className="mt-4 rounded-md border border-[#d0d7de] dark:border-[#30363d] bg-white/75 dark:bg-[#161b22]/75 p-4 text-center text-sm text-[#1f2328] backdrop-blur-[1.5px] dark:text-[#e6edf3]"
           style={{ animation: "auth-enter 620ms ease-out both" }}
         >
-          <span className="text-[#656d76] dark:text-[#8b949e]">New to FreqVault? </span>
+          <span className="text-[#656d76] dark:text-[#8b949e]">New to Aeronox? </span>
           <button
             type="button"
             onClick={() => navigate("/signup")}

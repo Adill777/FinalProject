@@ -1,6 +1,6 @@
-# FreqVault User Portal
+# Aeronox User Portal
 
-React + Vite frontend for the end-user side of FreqVault.
+React + Vite frontend for the end-user side of Aeronox.
 
 ## Purpose
 

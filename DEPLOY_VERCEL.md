@@ -46,7 +46,7 @@ SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your_email@example.com
 SMTP_PASS=your_smtp_password_or_app_password
-EMAIL_FROM=FreqVault <your_email@example.com>
+EMAIL_FROM=Aeronox <your_email@example.com>
 ```
 
 Notes:

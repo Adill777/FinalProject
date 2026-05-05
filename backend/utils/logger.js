@@ -13,7 +13,7 @@ const defaultLevelByEnv =
       : "debug";
 const configuredLevel = String(process.env.LOG_LEVEL || defaultLevelByEnv).toLowerCase();
 const minLevel = LEVEL_ORDER[configuredLevel] ?? LEVEL_ORDER.info;
-const serviceName = process.env.SERVICE_NAME || "freqvault-backend";
+const serviceName = process.env.SERVICE_NAME || "aeronox-backend";
 
 const shouldLog = (level) => {
   const value = LEVEL_ORDER[String(level || "info").toLowerCase()];

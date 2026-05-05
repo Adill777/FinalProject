@@ -31,7 +31,7 @@ export const OnboardingShell = ({
         </div>
 
         <div className="mb-4 text-center">
-          <h1 className="freqvault-logo text-4xl font-bold">FreqVault</h1>
+          <h1 className="aeronox-logo text-4xl font-bold">Aeronox</h1>
           <p className="text-xs text-muted-foreground">Secure onboarding workspace</p>
         </div>
 

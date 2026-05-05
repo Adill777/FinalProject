@@ -19,10 +19,10 @@ const logAudit = async ({
 
   const normalizedActorEmail = String(actorEmail || "").trim() || (
     normalizedActorType === "system"
-      ? "system@freqvault.local"
+      ? "system@aeronox.local"
       : normalizedActorType === "admin"
-        ? "unknown-admin@freqvault.local"
-        : "unknown-user@freqvault.local"
+        ? "unknown-admin@aeronox.local"
+        : "unknown-user@aeronox.local"
   );
 
   await AuditLogModel.create({

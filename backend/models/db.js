@@ -13,7 +13,7 @@ if (isProduction && !mongoUri.includes("@")) {
   throw new Error("MONGODB_URI must include authentication credentials in production.");
 }
 
-const defaultDevUri = "mongodb://localhost:27017/freqvault20";
+const defaultDevUri = "mongodb://localhost:27017/aeronox20";
 const effectiveMongoUri = mongoUri || defaultDevUri;
 
 const mongoOptions = {

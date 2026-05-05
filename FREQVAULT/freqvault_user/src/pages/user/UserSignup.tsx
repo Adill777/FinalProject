@@ -92,7 +92,7 @@ const UserSignup = () => {
 
         toast({
           title: "Account Created Successfully",
-          description: "Welcome to FreqVault!",
+          description: "Welcome to Aeronox!",
         });
 
         navigate("/login");
@@ -157,7 +157,7 @@ const UserSignup = () => {
       <div className="relative z-10 mb-6 text-center" style={{ animation: "auth-enter 420ms ease-out both" }}>
         <Shield className="mx-auto mb-6 h-12 w-12 text-[#24292f] dark:text-[#e6edf3]" strokeWidth={1.5} />
         <h1 className="text-2xl font-light tracking-tight text-[#1f2328] dark:text-[#e6edf3]">
-          Sign up to FreqVault
+          Sign up to Aeronox
         </h1>
       </div>
 
@@ -312,7 +312,7 @@ const UserSignup = () => {
         </div>
 
         <p className="mt-8 text-center text-xs text-[#656d76] dark:text-[#8b949e]">
-          By signing up to create an account, I accept FreqVault&apos;s{" "}
+          By signing up to create an account, I accept Aeronox&apos;s{" "}
           <Link to="/legal/user-agreement" className="text-[#0969da] dark:text-[#2f81f7] hover:underline">
             User Agreement
           </Link>

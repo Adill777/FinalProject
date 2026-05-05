@@ -61,7 +61,7 @@ export const Dashboard = ({ onLogout }: DashboardProps) => {
                 <Shield className="h-6 w-6 text-[#0969da] dark:text-[#58a6ff]" />
               </div>
               <div>
-                <h1 className="text-xl font-semibold tracking-tight text-[#1f2328] dark:text-[#e6edf3] md:text-2xl">FreqVault Admin Portal</h1>
+                <h1 className="text-xl font-semibold tracking-tight text-[#1f2328] dark:text-[#e6edf3] md:text-2xl">Aeronox Admin Portal</h1>
                 <p className="text-sm text-[#656d76] dark:text-[#8b949e]">Secure governance and access control</p>
               </div>
             </div>

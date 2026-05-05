@@ -1,6 +1,6 @@
-# FreqVault Admin Portal
+# Aeronox Admin Portal
 
-React + Vite frontend for administrative workflows in FreqVault.
+React + Vite frontend for administrative workflows in Aeronox.
 
 ## Purpose
 

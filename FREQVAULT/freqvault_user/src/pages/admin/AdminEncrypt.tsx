@@ -63,7 +63,7 @@ const AdminEncrypt = () => {
       {/* Header */}
       <div className="bg-white/80 backdrop-blur-lg border-b border-border/50 shadow-[var(--shadow-soft)]">
         <div className="max-w-7xl mx-auto px-8 py-6 flex justify-between items-center">
-          <h1 className="freqvault-logo text-3xl font-bold">FreqVault Admin</h1>
+          <h1 className="aeronox-logo text-3xl font-bold">Aeronox Admin</h1>
           <div className="flex items-center gap-6">
             <ProfessionalButton variant="outline" onClick={() => navigate("/admin/dashboard")}>
               Back to Dashboard
